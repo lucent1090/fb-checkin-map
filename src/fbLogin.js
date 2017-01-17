@@ -18,7 +18,6 @@ class FBLogin extends React.Component {
 				Object.assign(me, response.authResponse);
 				this.props.callback();
 			});
-			
 		}
 	}
 	handleLoginButton(){

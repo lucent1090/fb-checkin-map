@@ -60,6 +60,10 @@
 
 	var _fbLogin2 = _interopRequireDefault(_fbLogin);
 
+	var _googleMap = __webpack_require__(179);
+
+	var _googleMap2 = _interopRequireDefault(_googleMap);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -94,7 +98,7 @@
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_fbLogin2.default, { callback: this.getName })
+					_react2.default.createElement(_googleMap2.default, null)
 				);
 			}
 		}]);
@@ -103,6 +107,8 @@
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(Main, null), document.getElementById('main'));
+
+	// <FBLogin callback={this.getName}/>
 
 /***/ },
 /* 1 */
@@ -21642,6 +21648,107 @@
 	}(_react2.default.Component);
 
 	exports.default = FBLogin;
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(32);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ARC_DE_TRIOMPHE_POSITION = {
+	  lat: 48.873947,
+	  lng: 2.295038
+	};
+
+	var EIFFEL_TOWER_POSITION = {
+	  lat: 48.858608,
+	  lng: 2.294471
+	};
+
+	var GoogleMap = function (_React$Component) {
+	  _inherits(GoogleMap, _React$Component);
+
+	  function GoogleMap(props) {
+	    _classCallCheck(this, GoogleMap);
+
+	    var _this = _possibleConstructorReturn(this, (GoogleMap.__proto__ || Object.getPrototypeOf(GoogleMap)).call(this, props));
+
+	    _this.getGeolocation = _this.getGeolocation.bind(_this);
+	    _this.putMarkers = _this.putMarkers.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(GoogleMap, [{
+	    key: 'putMarkers',
+	    value: function putMarkers(map) {
+	      var marker = new google.maps.Marker({
+	        position: { lat: 25.020628, lng: 121.533697 },
+	        title: 'test'
+	      });
+	      marker.setMap(map);
+	    }
+	  }, {
+	    key: 'getGeolocation',
+	    value: function getGeolocation() {
+	      if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(function (position) {
+	          var pos = {
+	            lat: position.coords.latitude,
+	            lng: position.coords.longitude
+	          };
+	          this.map.setCenter(pos);
+	        }.bind(this));
+	      }
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.map = new google.maps.Map(this.refs.map, {
+	        center: { lat: -34.397, lng: 150.644 },
+	        zoom: 16
+	      });
+	      this.getGeolocation();
+	      this.putMarkers(this.map);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var mapStyle = {
+	        width: 500,
+	        height: 500,
+	        border: '1px solid black'
+	      };
+
+	      return _react2.default.createElement('div', { ref: 'map', style: mapStyle });
+	    }
+	  }]);
+
+	  return GoogleMap;
+	}(_react2.default.Component);
+
+	exports.default = GoogleMap;
 
 /***/ }
 /******/ ]);
