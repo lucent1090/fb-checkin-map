@@ -16,10 +16,6 @@ class Main extends React.Component{
 	parseTaggedPlaces(responseData){
 		var places = [];
 		responseData.forEach(function(element){
-				let lat, lng, title;
-				lat = element.place.location.latitude;
-				lng = element.place.location.longitude;
-				title = element.place.name;
 				places.push({
 					lat: element.place.location.latitude,
 					lng: element.place.location.longitude,
@@ -45,13 +41,12 @@ class Main extends React.Component{
 	}
 	render(){
 		return(
-			<div>
-				<FBLogin callback={this.getTaggedPlaces}/>				
-				<GoogleMap tagged={this.state.places} />				
+			<div id="container">
+				<FBLogin callback={this.getTaggedPlaces}/>
+				<GoogleMap tagged={this.state.places} />
 			</div>
 		);
 	}
 }
 
 ReactDOM.render(<Main />, document.getElementById('main'));
-

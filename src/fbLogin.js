@@ -24,6 +24,8 @@ class FBLogin extends React.Component {
 		FB.login(function(response){
 			this.statusChangeCallback(response);
 		}.bind(this), {scope: 'public_profile, email, user_tagged_places'});
+	
+		console.log(this.state.isLogin);
 	}
 	setFbAsyncInit(){
 		window.fbAsyncInit = () => {
@@ -43,7 +45,7 @@ class FBLogin extends React.Component {
       		let js = element;
       		if (d.getElementById(id)) { return; }
       		js = d.createElement(s); js.id = id;
-      		js.src = '//connect.facebook.net/en_US/all.js';
+      		js.src = '//connect.facebook.net/en_US/all.js#xfbml=1&version=v2.8';
       		fjs.parentNode.insertBefore(js, fjs);
     	})(document, 'script', 'facebook-jssdk');
 	}
@@ -58,11 +60,11 @@ class FBLogin extends React.Component {
 		let loginButton = this.state.isLogin ? 
 						  'Already Login' : 
 						  (<button onClick={this.handleLoginButton}>
-							Login
+						  		Login
 						  </button>);
 		
 		return(
-			<div>
+			<div className="fb_login">
 				{loginButton}
 			</div>
 		);
@@ -70,3 +72,4 @@ class FBLogin extends React.Component {
 }
 
 export default FBLogin;
+

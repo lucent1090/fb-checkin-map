@@ -31,7 +31,18 @@ class GoogleMap extends React.Component{
           lng: position.coords.longitude
         };
         this.map.setCenter(pos);
-      }.bind(this));
+
+      }.bind(this), function(error){
+        console.log("getCurrentPosition doesn't work");
+        console.log(error);
+
+        $.getJSON("http://ipinfo.io", function(ipinfo){
+          console.log("Found location ["+ipinfo.loc+"] by ipinfo.io");
+          var latLong = ipinfo.loc.split(",");
+          console.log(latLong);
+        }.bind(this));
+
+      }, {timeout: 5000});
     }
   }
 	componentDidMount(){
@@ -43,14 +54,8 @@ class GoogleMap extends React.Component{
     this.putMarkers(this.map, this.props.tagged);
 	}
   render() {
-  	const mapStyle = {
-  		width: 500,
-  		height: 500,
-  		border: '1px solid black'
-  	};
-
     return (
-    	<div ref="map" style={mapStyle}></div>
+    	<div ref="map" className="google_map"></div>
     );
   }
 }
