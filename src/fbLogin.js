@@ -60,11 +60,11 @@ class FBLogin extends React.Component {
 		let loginButton = this.state.isLogin ? 
 						  'Already Login' : 
 						  (<button onClick={this.handleLoginButton}>
-						  		Login
+						  		Connect with Facebook
 						  </button>);
-		
+		let classname4CSS = this.state.isLogin ? 'fb_Login' : 'fb_notLogin';
 		return(
-			<div className="fb_login">
+			<div className="fb_notLogin">
 				{loginButton}
 			</div>
 		);
