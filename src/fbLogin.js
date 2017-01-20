@@ -8,7 +8,8 @@ class FBLogin extends React.Component {
 		this.statusChangeCallback = this.statusChangeCallback.bind(this);
 
 		this.state = {
-			isLogin: false
+			isLogin: false,
+			profilePic: ''
 		}
 	}
 	statusChangeCallback(response){
@@ -18,14 +19,20 @@ class FBLogin extends React.Component {
 				Object.assign(me, response.authResponse);
 				this.props.callback();
 			});
+
+			FB.api('/me/picture?type=small', function (response) {
+      			if (response && !response.error) {
+      				this.setState({profilePic: response.data.url});
+    			}else{
+      				console.log(response.error);
+    			}
+    		}.bind(this));
 		}
 	}
 	handleLoginButton(){
 		FB.login(function(response){
 			this.statusChangeCallback(response);
 		}.bind(this), {scope: 'public_profile, email, user_tagged_places'});
-	
-		console.log(this.state.isLogin);
 	}
 	setFbAsyncInit(){
 		window.fbAsyncInit = () => {
@@ -57,15 +64,20 @@ class FBLogin extends React.Component {
 		this.loadSdkAsynchronously();
 	}
 	render(){
-		let loginButton = this.state.isLogin ? 
-						  'Already Login' : 
-						  (<button onClick={this.handleLoginButton}>
-						  		Connect with Facebook
-						  </button>);
-		let classname4CSS = this.state.isLogin ? 'fb_Login' : 'fb_notLogin';
+		let FB = this.state.isLogin ? 
+						  (<div className="fb_Login">
+						  		<img src={this.state.profilePic} alt=''></img>
+						   </div>) : 
+						  (<div className="fb_notLogin">
+						   		<p>Hi, welcome to Facebook Check-in Map.</p>
+						   		<p>Please login with Facebook to continue. We won't collect any personal information.</p>
+						   		<button onClick={this.handleLoginButton}>
+						  			Login with Facebook
+						   		</button>
+						   </div>);
 		return(
-			<div className="fb_notLogin">
-				{loginButton}
+			<div id="container_FB">
+				{FB}
 			</div>
 		);
 	}
