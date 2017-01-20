@@ -10,7 +10,8 @@ class GoogleMap extends React.Component{
   }
   componentWillReceiveProps(nextProps){
     if(this.props.tagged.length != nextProps.tagged.length){
-      this.forceUpdate();      
+
+      this.getGeolocation();
       this.putMarkers(this.map, nextProps.tagged);
     }
   }
@@ -18,8 +19,7 @@ class GoogleMap extends React.Component{
     markers.forEach(function(element){
       let marker = new google.maps.Marker({
         position: {lat: element.lat, lng: element.lng},
-        map: map,
-        title: element.title
+        map: map
       });
     });
   }
@@ -31,7 +31,6 @@ class GoogleMap extends React.Component{
           lng: position.coords.longitude
         };
         this.map.setCenter(pos);
-
       }.bind(this), function(error){
         console.log("getCurrentPosition doesn't work");
         console.log(error);
@@ -50,8 +49,6 @@ class GoogleMap extends React.Component{
                     center: {lat: -34.397, lng: 150.644},
                     zoom: 14
               });
-    this.getGeolocation();
-    this.putMarkers(this.map, this.props.tagged);
 	}
   render() {
     return (
