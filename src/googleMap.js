@@ -41,16 +41,22 @@ class GoogleMap extends React.Component{
           lng: position.coords.longitude
         };
         this.map.setCenter(pos);
+        new google.maps.Marker({
+          position: pos,
+          map: this.map,
+          animation: google.maps.Animation.BOUNCE,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7,
+            fillColor: '#4C69BA',
+            fillOpacity: 1,
+            strokeColor: '#F0F0F0',
+            strokeWeight: 3
+          }
+        });
       }.bind(this), function(error){
         console.log("getCurrentPosition doesn't work");
         console.log(error);
-
-        $.getJSON("http://ipinfo.io", function(ipinfo){
-          console.log("Found location ["+ipinfo.loc+"] by ipinfo.io");
-          var latLong = ipinfo.loc.split(",");
-          console.log(latLong);
-        }.bind(this));
-
       }, {timeout: 5000});
     }
   }
