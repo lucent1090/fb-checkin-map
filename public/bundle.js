@@ -94,10 +94,13 @@
 			value: function parseTaggedPlaces(responseData) {
 				var places = [];
 				responseData.forEach(function (element) {
+					var address = element.place.location.street == undefined ? '' : element.place.location.street;
 					places.push({
 						lat: element.place.location.latitude,
 						lng: element.place.location.longitude,
-						title: element.place.name
+						title: element.place.name,
+						cTime: element.created_time,
+						street: address
 					});
 				});
 				this.setState({
@@ -122,7 +125,12 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				return _react2.default.createElement('div', { id: 'container' });
+				return _react2.default.createElement(
+					'div',
+					{ id: 'container' },
+					_react2.default.createElement(_fbLogin2.default, { callback: this.getTaggedPlaces }),
+					_react2.default.createElement(_googleMap2.default, { tagged: this.state.places })
+				);
 			}
 		}]);
 
@@ -130,9 +138,6 @@
 	}(_react2.default.Component);
 
 	_reactDom2.default.render(_react2.default.createElement(Main, null), document.getElementById('main'));
-	//<div className="test">HEYYYY</div>
-	//<FBLogin callback={this.getTaggedPlaces}/>				
-	//				<GoogleMap tagged={this.state.places} />
 
 /***/ },
 /* 1 */
@@ -21587,7 +21592,8 @@
 			_this.statusChangeCallback = _this.statusChangeCallback.bind(_this);
 
 			_this.state = {
-				isLogin: false
+				isLogin: false,
+				profilePic: ''
 			};
 			return _this;
 		}
@@ -21603,6 +21609,14 @@
 						Object.assign(me, response.authResponse);
 						_this2.props.callback();
 					});
+
+					FB.api('/me/picture?type=small', function (response) {
+						if (response && !response.error) {
+							this.setState({ profilePic: response.data.url });
+						} else {
+							console.log(response.error);
+						}
+					}.bind(this));
 				}
 			}
 		}, {
@@ -21638,7 +21652,7 @@
 						return;
 					}
 					js = d.createElement(s);js.id = id;
-					js.src = '//connect.facebook.net/en_US/all.js';
+					js.src = '//connect.facebook.net/en_US/all.js#xfbml=1&version=v2.8';
 					fjs.parentNode.insertBefore(js, fjs);
 				})(document, 'script', 'facebook-jssdk');
 			}
@@ -21654,16 +21668,33 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var loginButton = this.state.isLogin ? 'Already Login' : _react2.default.createElement(
-					'button',
-					{ onClick: this.handleLoginButton },
-					'Login'
+				var FB = this.state.isLogin ? _react2.default.createElement(
+					'div',
+					{ className: 'fb_Login' },
+					_react2.default.createElement('img', { src: this.state.profilePic, alt: '' })
+				) : _react2.default.createElement(
+					'div',
+					{ className: 'fb_notLogin' },
+					_react2.default.createElement(
+						'p',
+						null,
+						'Hi, welcome to Facebook Check-in Map.'
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Please login with Facebook to continue. We won\'t collect any personal information.'
+					),
+					_react2.default.createElement(
+						'button',
+						{ onClick: this.handleLoginButton },
+						'Login with Facebook'
+					)
 				);
-
 				return _react2.default.createElement(
 					'div',
-					{ className: 'fb_login' },
-					loginButton
+					{ id: 'container_FB' },
+					FB
 				);
 			}
 		}]);
@@ -21718,18 +21749,24 @@
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (this.props.tagged.length != nextProps.tagged.length) {
-	        this.forceUpdate();
+
+	        this.getGeolocation();
 	        this.putMarkers(this.map, nextProps.tagged);
 	      }
 	    }
 	  }, {
 	    key: 'putMarkers',
-	    value: function putMarkers(map, markers) {
-	      markers.forEach(function (element) {
+	    value: function putMarkers(map, taggedPlaces) {
+	      taggedPlaces.forEach(function (element) {
 	        var marker = new google.maps.Marker({
 	          position: { lat: element.lat, lng: element.lng },
 	          map: map,
 	          title: element.title
+	        });
+	        var info = "<ul><li> Check-in Time: " + element.cTime + "</li><li> Name: " + element.title + "</li><li> Address: " + element.street + "</li><ul>";
+	        marker.addListener('click', function () {
+	          window.infoWindow.setContent(info);
+	          window.infoWindow.open(map, marker);
 	        });
 	      });
 	    }
@@ -21743,15 +21780,22 @@
 	            lng: position.coords.longitude
 	          };
 	          this.map.setCenter(pos);
+	          new google.maps.Marker({
+	            position: pos,
+	            map: this.map,
+	            animation: google.maps.Animation.BOUNCE,
+	            icon: {
+	              path: google.maps.SymbolPath.CIRCLE,
+	              scale: 7,
+	              fillColor: '#4C69BA',
+	              fillOpacity: 1,
+	              strokeColor: '#F0F0F0',
+	              strokeWeight: 3
+	            }
+	          });
 	        }.bind(this), function (error) {
 	          console.log("getCurrentPosition doesn't work");
 	          console.log(error);
-
-	          $.getJSON("http://ipinfo.io", function (ipinfo) {
-	            console.log("Found location [" + ipinfo.loc + "] by ipinfo.io");
-	            var latLong = ipinfo.loc.split(",");
-	            console.log(latLong);
-	          });
 	        }, { timeout: 5000 });
 	      }
 	    }
@@ -21762,8 +21806,7 @@
 	        center: { lat: -34.397, lng: 150.644 },
 	        zoom: 14
 	      });
-	      this.getGeolocation();
-	      this.putMarkers(this.map, this.props.tagged);
+	      window.infoWindow = new google.maps.InfoWindow();
 	    }
 	  }, {
 	    key: 'render',
