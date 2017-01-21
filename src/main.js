@@ -16,11 +16,15 @@ class Main extends React.Component{
 	parseTaggedPlaces(responseData){
 		var places = [];
 		responseData.forEach(function(element){
-				places.push({
-					lat: element.place.location.latitude,
-					lng: element.place.location.longitude,
-					title: element.place.name
-				});
+			let address = (element.place.location.street == undefined) ? 
+						  '' : element.place.location.street;
+			places.push({
+				lat: element.place.location.latitude,
+				lng: element.place.location.longitude,
+				title: element.place.name,
+				cTime: element.created_time,
+				street: address
+			});
 		});
 		this.setState({
 			gotTaggedPlaces: true,

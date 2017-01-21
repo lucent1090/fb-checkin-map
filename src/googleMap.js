@@ -15,11 +15,21 @@ class GoogleMap extends React.Component{
       this.putMarkers(this.map, nextProps.tagged);
     }
   }
-  putMarkers(map, markers){
-    markers.forEach(function(element){
-      let marker = new google.maps.Marker({
+  putMarkers(map, taggedPlaces){
+    taggedPlaces.forEach(function(element){
+      var marker =  new google.maps.Marker({
         position: {lat: element.lat, lng: element.lng},
-        map: map
+        map: map,
+        title: element.title
+      });
+      let info =
+        "<ul><li> Check-in Time: " + element.cTime + 
+        "</li><li> Name: " + element.title + 
+        "</li><li> Address: " + element.street +
+        "</li><ul>";
+      marker.addListener('click', function(){
+        window.infoWindow.setContent(info);
+        window.infoWindow.open(map, marker);
       });
     });
   }
@@ -49,6 +59,7 @@ class GoogleMap extends React.Component{
                     center: {lat: -34.397, lng: 150.644},
                     zoom: 14
               });
+    window.infoWindow = new google.maps.InfoWindow();
 	}
   render() {
     return (
