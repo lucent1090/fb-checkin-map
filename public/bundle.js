@@ -21683,7 +21683,7 @@
 					_react2.default.createElement(
 						'p',
 						null,
-						'Please login with Facebook to continue. We won\'t collect any personal information.'
+						'We will show your check-in history on the map. Please login with Facebook to continue.'
 					),
 					_react2.default.createElement(
 						'button',

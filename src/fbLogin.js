@@ -70,7 +70,7 @@ class FBLogin extends React.Component {
 						   </div>) : 
 						  (<div className="fb_notLogin">
 						   		<p>Hi, welcome to Facebook Check-in Map.</p>
-						   		<p>Please login with Facebook to continue. We won't collect any personal information.</p>
+						   		<p>We will show your check-in history on the map. Please login with Facebook to continue.</p>
 						   		<button onClick={this.handleLoginButton}>
 						  			Login with Facebook
 						   		</button>

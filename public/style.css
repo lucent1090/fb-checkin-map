@@ -5,11 +5,37 @@ html, body, #main, #container {
 	padding: 0;
 }
 
-.google_map {
+#footer {
+	box-sizing: border-box;
+	background-color: #F0F0F0;
+	width: 100%;
+	position: absolute;
+	top: 95%;
+	padding-top: 5px;
+	text-align: center;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+.policy {
 	position: relative;
-	height: 100%;
+	top: 5%;
+	left: 50%;
+	width: 50%;
+	transform: translateX(-50%);
+	border: 5px solid #4C69BA;
+	text-align: center;
+	font-size: 1.2em;
+	padding-top: 0.7em;
+	padding-bottom: 0.7em;
+}
+
+.google_map {
+	box-shadow: 0px 3px 3px #888;
+	position: relative;
+	height: 95%;
 	width: 100%;
 	top: 0;
+	z-index: 5;
 }
 
 .fb_Login {
