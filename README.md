@@ -12,3 +12,6 @@ Show your facebook check-in history including tagged by other people on google m
 * React
 * ES6 using Babel
 * Webpack
+
+![image](fb-checkin-map/screenshot/login page.png)
+![image](fb-checkin-map/screenshot/map page.png)
